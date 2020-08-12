@@ -13,14 +13,16 @@ function parseFunc(func) {
 
 function drawAxis() {
     //draw y axis
+    const x = canvas.width;
+    const y = canvas.height
     ctx.beginPath()
-    ctx.moveTo(250, 0);
-    ctx.lineTo(250, 500);
+    ctx.moveTo(x / 2, 0);
+    ctx.lineTo(x / 2, y);
     ctx.stroke();
     //draw x axis
     ctx.beginPath()
-    ctx.moveTo(0, 250);
-    ctx.lineTo(500, 250);
+    ctx.moveTo(0, y / 2);
+    ctx.lineTo(x, y / 2);
     ctx.stroke();
 }
 
