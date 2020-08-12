@@ -28,13 +28,19 @@ function drawPoint(x, y) {
     ctx.fillRect((center.x + x), (center.y - y), 2, 2);
 }
 
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxis();
+}
+
 drawButton.onclick = () => {
+    clearCanvas()
     let formula = document.getElementById("formula").value;
     formula = parseFunc(formula);
     for (let x = -100; x < 100; x++) {
         let y = eval(formula);
         drawPoint(x, y)
     }
-    console.log(formula);
+    
 }
 drawAxis()
