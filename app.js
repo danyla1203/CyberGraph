@@ -2,19 +2,18 @@ const drawButton = document.getElementById("drawBtn")
 const canvas = document.getElementById("graph");
 const ctx = canvas.getContext("2d")
 
-const center = {
-    x: 249,
-    y: 249  
-}
 
 function parseFunc(func) {
-    return func.replace("abs(x)", "Math.abs(x)");
+    return (x) => {
+        return eval(func.replace("abs(x)", "Math.abs(x)"));
+    }
 }
 
 function drawAxis() {
     //draw y axis
     const x = canvas.width;
     const y = canvas.height
+    ctx.strokeStyle = "black"
     ctx.beginPath()
     ctx.moveTo(x / 2, 0);
     ctx.lineTo(x / 2, y);
@@ -26,8 +25,19 @@ function drawAxis() {
     ctx.stroke();
 }
 
-function drawPoint(x, y) {
-    ctx.fillRect((center.x + x), (center.y - y), 2, 2);
+function drawLine(canvX, canvY, prevPoint) {    
+    ctx.strokeStyle = "orange";
+    ctx.beginPath();
+    ctx.moveTo(prevPoint.canvX, prevPoint.canvY);
+    ctx.lineTo(canvX, canvY);
+    ctx.stroke();
+}
+
+function getPrevPoint(graphX, graphY) {
+    return {
+        canvX: graphX + 250,
+        canvY: graphY > 0 ? 250 - graphY : 250 + (graphY * -1)
+    }
 }
 
 function clearCanvas() {
@@ -37,12 +47,26 @@ function clearCanvas() {
 
 drawButton.onclick = () => {
     clearCanvas()
+
     let formula = document.getElementById("formula").value;
-    formula = parseFunc(formula);
-    for (let x = -100; x < 100; x++) {
-        let y = eval(formula);
-        drawPoint(x, y)
+    getYFunc = parseFunc(formula);
+    
+    let prevPoint = getPrevPoint(-250, getYFunc(-250))
+    for (let i = 1; i < 500; i++) {
+        let graphX = i - 250;
+        let graphY = getYFunc(graphX);
+
+        let canvX = i;
+
+        //if point went out from graph
+        if (graphY > 250 || graphY < -250) {
+            continue;
+        } else {
+            let canvY = graphY > 0 ? (250 - graphY) : (250 + (graphY * -1))
+            drawLine(canvX, canvY, prevPoint);
+            prevPoint = getPrevPoint(graphX, graphY)
+        }
     }
     
-}
+}   
 drawAxis()
