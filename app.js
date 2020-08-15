@@ -57,15 +57,9 @@ drawButton.onclick = () => {
         let graphY = getYFunc(graphX);
 
         let canvX = i;
-
-        //if point went out from graph
-        if (graphY > 250 || graphY < -250) {
-            continue;
-        } else {
-            let canvY = graphY > 0 ? (250 - graphY) : (250 + (graphY * -1))
-            drawLine(canvX, canvY, prevPoint);
-            prevPoint = getPrevPoint(graphX, graphY)
-        }
+        let canvY = graphY > 0 ? (250 - graphY) : (250 + (graphY * -1))
+        drawLine(canvX, canvY, prevPoint);
+        prevPoint = getPrevPoint(graphX, graphY)
     }
     
 }   
