@@ -5,6 +5,13 @@ const ctx = canvas.getContext("2d")
 const canvHeight = canvas.height;
 const canvWidth = canvas.width;
 
+let axisCoords = {
+    yAxis: canvWidth / 2,
+    xAxis: canvHeight / 2
+}
+
+drawAxis();
+
 function parseFunc(func) {
     return (x) => {
         return eval(func.replace("abs(x)", "Math.abs(x)"));
@@ -16,6 +23,7 @@ function drawAxis() {
     const x = canvWidth
     const y = canvHeight
     ctx.strokeStyle = "black"
+    ctx.lineWidth = "1"
     ctx.beginPath()
     ctx.moveTo(x / 2, 0);
     ctx.lineTo(x / 2, y);
@@ -47,6 +55,36 @@ function clearCanvas() {
     drawAxis();
 }
 
+function clearYAxis(canvX) {
+    ctx.clearRect(canvX -1, 0, 2, canvHeight / 2 -1);
+    ctx.clearRect(canvX -1, canvHeight / 2 -    1, 2, canvHeight)
+}
+function drawYAxis(canvX) {
+    ctx.beginPath();
+    ctx.moveTo(canvX, 0);
+    ctx.lineTo(canvX, canvHeight);
+    ctx.stroke();
+}
+
+function redrawAxis(changedX, changedY, axisCoords) {
+    if (changedX == 0) {
+        //if only y
+
+    } else if (changedY == 0) {
+        //if only x
+        clearYAxis(axisCoords.yAxis);
+        if (changedX < 0) {
+            let canvX = changedX * -1 / 20
+            axisCoords.yAxis += canvX;
+            //debugger;
+            drawYAxis(axisCoords.yAxis);
+            
+        }
+    } else {
+        //x and y changed
+    }
+}
+
 drawButton.onclick = () => {
     clearCanvas()
 
@@ -65,4 +103,27 @@ drawButton.onclick = () => {
     }
     
 }
-drawAxis()
+
+canvas.onmousedown = (e) => {
+    //cords, where mouse button is downed
+    const pointerCoords = {
+        x: e.screenX,
+        y: e.screenY
+    }
+
+    canvas.onmousemove = (e) => {
+        const afterMoveCoords = { x: e.screenX, y: e.screenY }
+        let changedX = pointerCoords.x - afterMoveCoords.x;
+        let changedY = pointerCoords.y - afterMoveCoords.y;
+
+        redrawAxis(changedX, changedY, axisCoords);
+
+        console.log(pointerCoords, "pointer coords");
+        console.log(afterMoveCoords, "after move coords")
+        //debugger;
+    }
+}
+
+canvas.onmouseup = () => {
+    canvas.onmousemove = null;
+}
