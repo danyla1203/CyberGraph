@@ -1,0 +1,18 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+canvas#graph {
+   width: 100vw;
+   height: 100vh;
+}
+#input {
+    position: fixed;
+    top: 90vh;
+    width: 0;
+}
