@@ -2,6 +2,8 @@ const drawButton = document.getElementById("drawBtn")
 const canvas = document.getElementById("graph");
 const ctx = canvas.getContext("2d")
 
+const canvHeight = canvas.height;
+const canvWidth = canvas.width;
 
 function parseFunc(func) {
     return (x) => {
@@ -11,8 +13,8 @@ function parseFunc(func) {
 
 function drawAxis() {
     //draw y axis
-    const x = canvas.width;
-    const y = canvas.height
+    const x = canvWidth
+    const y = canvHeight
     ctx.strokeStyle = "black"
     ctx.beginPath()
     ctx.moveTo(x / 2, 0);
@@ -35,13 +37,13 @@ function drawLine(canvX, canvY, prevPoint) {
 
 function getPrevPoint(graphX, graphY) {
     return {
-        canvX: graphX + 250,
-        canvY: graphY > 0 ? 250 - graphY : 250 + (graphY * -1)
+        canvX: graphX + canvWidth / 2,
+        canvY: graphY > 0 ? canvHeight / 2 - graphY : canvHeight / 2 + (graphY * -1)
     }
 }
 
 function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvWidth, canvHeight);
     drawAxis();
 }
 
@@ -51,16 +53,16 @@ drawButton.onclick = () => {
     let formula = document.getElementById("formula").value;
     getYFunc = parseFunc(formula);
     
-    let prevPoint = getPrevPoint(-250, getYFunc(-250))
-    for (let i = 1; i < 500; i++) {
-        let graphX = i - 250;
+    let prevPoint = getPrevPoint(-canvWidth, getYFunc(-canvHeight))
+    for (let i = 1; i < canvWidth; i++) {
+        let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);
 
         let canvX = i;
-        let canvY = graphY > 0 ? (250 - graphY) : (250 + (graphY * -1))
+        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) : (canvHeight / 2 + (graphY * -1))
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(graphX, graphY)
     }
     
-}   
+}
 drawAxis()
