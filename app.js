@@ -56,13 +56,20 @@ function clearCanvas() {
 }
 
 function clearYAxis(canvX) {
-    ctx.clearRect(canvX -1, 0, 2, canvHeight / 2 -1);
-    ctx.clearRect(canvX -1, canvHeight / 2 -    1, 2, canvHeight)
+    ctx.clearRect(canvX - 1, 0, 2, canvHeight / 2 -1);
+    ctx.clearRect(canvX -1, canvHeight / 2 - 1, 2, canvHeight)
 }
-function drawYAxis(canvX) {
+
+function drawAxisY(canvX) {
     ctx.beginPath();
     ctx.moveTo(canvX, 0);
     ctx.lineTo(canvX, canvHeight);
+    ctx.stroke();
+}
+function drawAxisX(canvY) {
+    ctx.beginPath();
+    ctx.moveTo(0, canvY)
+    ctx.lineTo(canvWidth, canvY);
     ctx.stroke();
 }
 
@@ -75,11 +82,14 @@ function redrawAxis(changedX, changedY, axisCoords) {
         clearYAxis(axisCoords.yAxis);
         if (changedX < 0) {
             let canvX = changedX * -1 / 20
-            axisCoords.yAxis += canvX;
-            //debugger;
-            drawYAxis(axisCoords.yAxis);
-            
+            axisCoords.yAxis += canvX;  
+
+        } else if (changedX > 0) {
+            let canvX = changedX / 20;
+            axisCoords.yAxis -= canvX;   
         }
+        drawAxisY(axisCoords.yAxis);
+        drawAxisX(axisCoords.xAxis)
     } else {
         //x and y changed
     }
@@ -118,8 +128,7 @@ canvas.onmousedown = (e) => {
 
         redrawAxis(changedX, changedY, axisCoords);
 
-        console.log(pointerCoords, "pointer coords");
-        console.log(afterMoveCoords, "after move coords")
+        console.log(changedX)
         //debugger;
     }
 }
