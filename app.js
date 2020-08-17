@@ -81,11 +81,11 @@ function redrawAxis(changedX, changedY, axisCoords) {
         //if only x
         clearYAxis(axisCoords.yAxis);
         if (changedX < 0) {
-            let canvX = changedX * -1 / 20
+            let canvX = changedX * -1 / 2
             axisCoords.yAxis += canvX;  
 
         } else if (changedX > 0) {
-            let canvX = changedX / 20;
+            let canvX = changedX / 2;
             axisCoords.yAxis -= canvX;   
         }
         drawAxisY(axisCoords.yAxis);
@@ -120,19 +120,21 @@ canvas.onmousedown = (e) => {
         x: e.screenX,
         y: e.screenY
     }
-
+    canvas.style.cursor = "move"
     canvas.onmousemove = (e) => {
         const afterMoveCoords = { x: e.screenX, y: e.screenY }
         let changedX = pointerCoords.x - afterMoveCoords.x;
         let changedY = pointerCoords.y - afterMoveCoords.y;
 
         redrawAxis(changedX, changedY, axisCoords);
-
-        console.log(changedX)
+        pointerCoords.x = afterMoveCoords.x;
+        pointerCoords.y = afterMoveCoords.y;
+       
         //debugger;
     }
 }
 
 canvas.onmouseup = () => {
     canvas.onmousemove = null;
+    canvas.style.cursor = "auto"
 }
