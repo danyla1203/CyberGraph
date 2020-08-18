@@ -78,31 +78,28 @@ function drawAxisX(canvY) {
 }
 
 function redrawAxis(changedX, changedY, axisCoords) {
-    if (changedX == 0) {
-        //if only y
-        clearAxisX(axisCoords.xAxis)
-        if (changedY > 0) {
-
-        } else if (changedY < 0) {
-
-        }
-        
-    } else if (changedY == 0) {
-        //if only x
-        clearAxisY(axisCoords.yAxis);
-        if (changedX < 0) {
-            let canvX = changedX * -1 / 3
-            axisCoords.yAxis += canvX;  
-
-        } else if (changedX > 0) {
-            let canvX = changedX / 3;
-            axisCoords.yAxis -= canvX;   
-        }
-        drawAxisY(axisCoords.yAxis);
-        drawAxisX(axisCoords.xAxis)
-    } else {
-        
+    clearAxisX(axisCoords.xAxis)
+    clearAxisY(axisCoords.yAxis);
+    
+    if (changedY > 0) {
+        let canvY = changedY / 4;
+        axisCoords.xAxis -= canvY
+    } else if (changedY < 0) {
+        let canvY = changedY * -1 / 4;
+        axisCoords.xAxis += canvY
     }
+
+    if (changedX < 0) {
+        let canvX = changedX * -1 / 4
+        axisCoords.yAxis += canvX;  
+
+    } else if (changedX > 0) {
+        let canvX = changedX / 4;
+        axisCoords.yAxis -= canvX;   
+    }
+
+    drawAxisY(axisCoords.yAxis);
+    drawAxisX(axisCoords.xAxis)
 }
 
 drawButton.onclick = () => {
