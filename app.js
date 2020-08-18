@@ -55,9 +55,13 @@ function clearCanvas() {
     drawAxis();
 }
 
-function clearYAxis(canvX) {
+function clearAxisY(canvX) {
     ctx.clearRect(canvX - 1, 0, 2, canvHeight / 2 -1);
     ctx.clearRect(canvX -1, canvHeight / 2 - 1, 2, canvHeight)
+}
+function clearAxisX(canvY) {
+    ctx.clearRect(0, canvY - 1, canvWidth / 2 - 1, 2);
+    ctx.clearRect(canvWidth / 2 + 1, canvY - 1, canvWidth / 2, 2);;
 }
 
 function drawAxisY(canvX) {
@@ -76,10 +80,16 @@ function drawAxisX(canvY) {
 function redrawAxis(changedX, changedY, axisCoords) {
     if (changedX == 0) {
         //if only y
+        clearAxisX(axisCoords.xAxis)
+        if (changedY > 0) {
 
+        } else if (changedY < 0) {
+
+        }
+        
     } else if (changedY == 0) {
         //if only x
-        clearYAxis(axisCoords.yAxis);
+        clearAxisY(axisCoords.yAxis);
         if (changedX < 0) {
             let canvX = changedX * -1 / 3
             axisCoords.yAxis += canvX;  
@@ -91,7 +101,7 @@ function redrawAxis(changedX, changedY, axisCoords) {
         drawAxisY(axisCoords.yAxis);
         drawAxisX(axisCoords.xAxis)
     } else {
-        //x and y changed
+        
     }
 }
 
