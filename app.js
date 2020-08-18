@@ -81,11 +81,11 @@ function redrawAxis(changedX, changedY, axisCoords) {
         //if only x
         clearYAxis(axisCoords.yAxis);
         if (changedX < 0) {
-            let canvX = changedX * -1 / 2
+            let canvX = changedX * -1 / 3
             axisCoords.yAxis += canvX;  
 
         } else if (changedX > 0) {
-            let canvX = changedX / 2;
+            let canvX = changedX / 3;
             axisCoords.yAxis -= canvX;   
         }
         drawAxisY(axisCoords.yAxis);
@@ -111,6 +111,7 @@ drawButton.onclick = () => {
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(graphX, graphY)
     }
+    ctx.strokeStyle = "black";
     
 }
 
