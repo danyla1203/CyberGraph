@@ -19,20 +19,8 @@ function parseFunc(func) {
 }
 
 function drawAxis() {
-    //draw y axis
-    const x = canvWidth
-    const y = canvHeight
-    ctx.strokeStyle = "black"
-    ctx.lineWidth = "1"
-    ctx.beginPath()
-    ctx.moveTo(x / 2, 0);
-    ctx.lineTo(x / 2, y);
-    ctx.stroke();
-    //draw x axis
-    ctx.beginPath()
-    ctx.moveTo(0, y / 2);
-    ctx.lineTo(x, y / 2);
-    ctx.stroke();
+    drawAxisX(axisCoords.xAxis);
+    drawAxisY(axisCoords.yAxis);
 }
 
 function drawLine(canvX, canvY, prevPoint) {    
@@ -137,8 +125,6 @@ canvas.onmousedown = (e) => {
         redrawAxis(changedX, changedY, axisCoords);
         pointerCoords.x = afterMoveCoords.x;
         pointerCoords.y = afterMoveCoords.y;
-       
-        //debugger;
     }
 }
 
