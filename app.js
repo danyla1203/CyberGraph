@@ -1,16 +1,26 @@
 const drawButton = document.getElementById("drawBtn")
 const canvas = document.getElementById("graph");
 const ctx = canvas.getContext("2d")
+canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const canvHeight = canvas.height;
 const canvWidth = canvas.width;
-
 let axisCoords = {
     yAxis: canvWidth / 2,
-    xAxis: canvHeight / 2
+    xAxis: canvHeight / 2,
+    centerDifferenceX: null,
+    centerDifferenceY: null
 }
+axisCoords.centerDifferenceX = canvWidth / 2 - axisCoords.yAxis;
+axisCoords.centerDifferenceY = canvHeight / 2 - axisCoords.xAxis;
+console.log(axisCoords)
 
 drawAxis();
+ctx.beginPath();
+ctx.moveTo(10, 10);
+ctx.lineTo(20, 20);
+ctx.stroke();
 
 function parseFunc(func) {
     return (x) => {
@@ -70,19 +80,19 @@ function redrawAxis(changedX, changedY, axisCoords) {
     clearAxisY(axisCoords.yAxis);
 
     if (changedY > 0) {
-        let canvY = changedY / 4;
+        let canvY = changedY;
         axisCoords.xAxis -= canvY
     } else if (changedY < 0) {
-        let canvY = changedY * -1 / 4;
+        let canvY = changedY * -1;
         axisCoords.xAxis += canvY
     }
 
     if (changedX < 0) {
-        let canvX = changedX * -1 / 4
+        let canvX = changedX * -1;
         axisCoords.yAxis += canvX;  
 
     } else if (changedX > 0) {
-        let canvX = changedX / 4;
+        let canvX = changedX;
         axisCoords.yAxis -= canvX;   
     }
 
@@ -96,18 +106,18 @@ drawButton.onclick = () => {
     let formula = document.getElementById("formula").value;
     getYFunc = parseFunc(formula);
     
-    let prevPoint = getPrevPoint(-canvWidth, getYFunc(-canvHeight))
+    let prevPoint = getPrevPoint(-canvWidth + axisCoords.centerDifferenceX, getYFunc(-canvHeight - axisCoords.centerDifferenceY))
+    
     for (let i = 1; i < canvWidth; i++) {
         let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);
-
-        let canvX = i;
-        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) : (canvHeight / 2 + (graphY * -1))
+       // debugger;
+        let canvX = i - axisCoords.centerDifferenceX;
+        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) - axisCoords.centerDifferenceY : (canvHeight / 2 + (graphY * -1)) - axisCoords.centerDifferenceY
         drawLine(canvX, canvY, prevPoint);
-        prevPoint = getPrevPoint(graphX, graphY)
+        prevPoint = getPrevPoint(graphX - axisCoords.centerDifferenceX, graphY + axisCoords.centerDifferenceY)
     }
     ctx.strokeStyle = "black";
-    
 }
 
 canvas.onmousedown = (e) => {
@@ -116,6 +126,7 @@ canvas.onmousedown = (e) => {
         x: e.screenX,
         y: e.screenY
     }
+    
     canvas.style.cursor = "move"
     canvas.onmousemove = (e) => {
         const afterMoveCoords = { x: e.screenX, y: e.screenY }
@@ -125,10 +136,14 @@ canvas.onmousedown = (e) => {
         redrawAxis(changedX, changedY, axisCoords);
         pointerCoords.x = afterMoveCoords.x;
         pointerCoords.y = afterMoveCoords.y;
+        //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
+        axisCoords.centerDifferenceX = canvWidth / 2 - axisCoords.yAxis;
+        axisCoords.centerDifferenceY = canvHeight / 2 - axisCoords.xAxis;
     }
 }
 
 canvas.onmouseup = () => {
+    console.log(axisCoords);
     canvas.onmousemove = null;
     canvas.style.cursor = "auto"
 }
