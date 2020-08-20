@@ -106,19 +106,29 @@ function redrawAxis(changedX, changedY) {
     drawAxisX(canvData.axis.xAxis);
 }
 
+function getCanvYCoordFromGraphYCoord(graphY) {
+    if (graphY > 0) {
+        return canvHeight / 2 - graphY - canvData.axis.centerDifferenceY
+    } else {
+        return (canvHeight / 2 + (graphY * -1)) - canvData.axis.centerDifferenceY;
+    }
+}
+
 function drawGraph(getYFunc) {
     if (getYFunc == null) {
         return;
     }
     //TODO: get correct prevPoint at start
-    let prevPoint = getPrevPoint(-canvData.axis.centerDifferenceX, getYFunc(-canvWidth / 2));
+    let canvXOnStart = 0 - canvData.axis.centerDifferenceX;
+    let canvYOnStart = getCanvYCoordFromGraphYCoord(getYFunc(0 - canvWidth / 2))
+    let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     
     for (let i = 1; i < canvWidth; i++) {
         debugger
         let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);
         let canvX = i - canvData.axis.centerDifferenceX;
-        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) - canvData.axis.centerDifferenceY : (canvHeight / 2 + (graphY * -1)) - canvData.axis.centerDifferenceY;
+        let canvY = getCanvYCoordFromGraphYCoord(graphY);
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(canvX, canvY);
     }
