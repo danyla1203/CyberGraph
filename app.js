@@ -37,10 +37,10 @@ function drawLine(canvX, canvY, prevPoint) {
     ctx.stroke();
 }
 
-function getPrevPoint(graphX, graphY) {
+function getPrevPoint(canvX, canvY) {
     return {
-        canvX: graphX + canvWidth / 2,
-        canvY: graphY > 0 ? canvHeight / 2 - graphY : canvHeight / 2 + (graphY * -1)
+        canvX: canvX,
+        canvY: canvY
     }
 }
 
@@ -98,23 +98,28 @@ function redrawAxis(changedX, changedY, axisCoords) {
     drawAxisX(axisCoords.xAxis);
 }
 
-drawButton.onclick = () => {
-    clearCanvas();
-
-    let formula = document.getElementById("formula").value;
-    getYFunc = parseFunc(formula);
-    
-    let prevPoint = getPrevPoint(-canvWidth + axisCoords.centerDifferenceX, getYFunc(-canvHeight - axisCoords.centerDifferenceY));
+function drawGraph(getYFunc) {
+    //TODO: get correct prevPoint at start
+    let prevPoint = getPrevPoint(-axisCoords.centerDifferenceX, getYFunc(-canvWidth / 2));
     
     for (let i = 1; i < canvWidth; i++) {
+        debugger
         let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);
         let canvX = i - axisCoords.centerDifferenceX;
         let canvY = graphY > 0 ? (canvHeight / 2 - graphY) - axisCoords.centerDifferenceY : (canvHeight / 2 + (graphY * -1)) - axisCoords.centerDifferenceY;
         drawLine(canvX, canvY, prevPoint);
-        prevPoint = getPrevPoint(graphX - axisCoords.centerDifferenceX, graphY + axisCoords.centerDifferenceY);
+        prevPoint = getPrevPoint(canvX, canvY);
     }
     ctx.strokeStyle = "black";
+}
+
+drawButton.onclick = () => {
+    clearCanvas();
+
+    let formula = document.getElementById("formula").value;
+    getYFunc = parseFunc(formula);
+    drawGraph(getYFunc);
 }
 
 canvas.onmousedown = (e) => {
