@@ -159,13 +159,15 @@ canvas.onmousedown = (e) => {
         
         clearCanvas();
         redrawAxis(changedX, changedY);
-        drawGraph(canvData.graphFunc);
+
         //update pointer coords
         pointerCoords.x = afterMoveCoords.x;
         pointerCoords.y = afterMoveCoords.y;
         //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
         canvData.axis.centerDifferenceX = canvWidth / 2 - canvData.axis.yAxis;
         canvData.axis.centerDifferenceY = canvHeight / 2 - canvData.axis.xAxis;
+
+        drawGraph(canvData.graphFunc);
     }
 }
 
