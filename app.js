@@ -148,7 +148,7 @@ canvas.onmousedown = (e) => {
         let changedY = pointerCoords.y - afterMoveCoords.y;
         
         clearCanvas();
-        redrawAxis(changedX, changedY, canvData.axis);
+        redrawAxis(changedX, changedY);
         drawGraph(canvData.graphFunc);
         //update pointer coords
         pointerCoords.x = afterMoveCoords.x;
