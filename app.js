@@ -33,8 +33,8 @@ function parseFunc(func) {
 }
 
 function drawAxis() {
-    drawAxisX(axisCoords.xAxis);
-    drawAxisY(axisCoords.yAxis);
+    drawAxisX(canvData.axis.xAxis);
+    drawAxisY(canvData.axis.yAxis);
 }
 
 function drawLine(canvX, canvY, prevPoint) {    
@@ -79,31 +79,31 @@ function drawAxisX(canvY) {
     ctx.stroke();
 }
 
-function redrawAxis(changedX, changedY, axisCoords) {
-    clearAxisX(axisCoords.xAxis);
-    clearAxisY(axisCoords.yAxis);
+function redrawAxis(changedX, changedY) {
+    clearAxisX(canvData.axis.xAxis);
+    clearAxisY(canvData.axis.yAxis);
 
-    //update axisCoords fields by changeX, changeY
+    //update canvData.axis fields by changeX, changeY
     if (changedY > 0) {
         let canvY = changedY;
-        axisCoords.xAxis -= canvY
+        canvData.axis.xAxis -= canvY
     } else if (changedY < 0) {
         let canvY = changedY * -1;
-        axisCoords.xAxis += canvY;
+        canvData.axis.xAxis += canvY;
     }
 
     if (changedX < 0) {
         let canvX = changedX * -1;
-        axisCoords.yAxis += canvX;  
+        canvData.axis.yAxis += canvX;  
 
     } else if (changedX > 0) {
         let canvX = changedX;
-        axisCoords.yAxis -= canvX;   
+        canvData.axis.yAxis -= canvX;   
     }
 
     //draw new axis
-    drawAxisY(axisCoords.yAxis);
-    drawAxisX(axisCoords.xAxis);
+    drawAxisY(canvData.axis.yAxis);
+    drawAxisX(canvData.axis.xAxis);
 }
 
 function drawGraph(getYFunc) {
@@ -111,14 +111,14 @@ function drawGraph(getYFunc) {
         return;
     }
     //TODO: get correct prevPoint at start
-    let prevPoint = getPrevPoint(-axisCoords.centerDifferenceX, getYFunc(-canvWidth / 2));
+    let prevPoint = getPrevPoint(-canvData.axis.centerDifferenceX, getYFunc(-canvWidth / 2));
     
     for (let i = 1; i < canvWidth; i++) {
         debugger
         let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);
-        let canvX = i - axisCoords.centerDifferenceX;
-        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) - axisCoords.centerDifferenceY : (canvHeight / 2 + (graphY * -1)) - axisCoords.centerDifferenceY;
+        let canvX = i - canvData.axis.centerDifferenceX;
+        let canvY = graphY > 0 ? (canvHeight / 2 - graphY) - canvData.axis.centerDifferenceY : (canvHeight / 2 + (graphY * -1)) - canvData.axis.centerDifferenceY;
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(canvX, canvY);
     }
@@ -147,20 +147,20 @@ canvas.onmousedown = (e) => {
         let changedX = pointerCoords.x - afterMoveCoords.x;
         let changedY = pointerCoords.y - afterMoveCoords.y;
         
-        ctx.clearRect(0,0, canvWidth, canvHeight);
-        redrawAxis(changedX, changedY, axisCoords);
+        clearCanvas();
+        redrawAxis(changedX, changedY, canvData.axis);
         drawGraph(canvData.graphFunc);
         //update pointer coords
         pointerCoords.x = afterMoveCoords.x;
         pointerCoords.y = afterMoveCoords.y;
         //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
-        axisCoords.centerDifferenceX = canvWidth / 2 - axisCoords.yAxis;
-        axisCoords.centerDifferenceY = canvHeight / 2 - axisCoords.xAxis;
+        canvData.axis.centerDifferenceX = canvWidth / 2 - canvData.axis.yAxis;
+        canvData.axis.centerDifferenceY = canvHeight / 2 - canvData.axis.xAxis;
     }
 }
 
 canvas.onmouseup = () => {
-    console.log(axisCoords);
+    console.log(canvData.axis);
     canvas.onmousemove = null;
     canvas.style.cursor = "auto";
 }
