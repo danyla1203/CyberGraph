@@ -1,20 +1,28 @@
 const drawButton = document.getElementById("drawBtn");
 const canvas = document.getElementById("graph");
-const ctx = canvas.getContext("2d")
+const ctx = canvas.getContext("2d");
 canvas.width  = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const canvHeight = canvas.height;
 const canvWidth = canvas.width;
+
+let canvData = {
+    axis: {
+        yAxis: canvWidth / 2,
+        xAxis: canvHeight / 2,
+        centerDifferenceX: 0,
+        centerDifferenceY: 0
+    },
+    graphFunc: null,
+}
+
 let axisCoords = {
     yAxis: canvWidth / 2,
     xAxis: canvHeight / 2,
-    centerDifferenceX: null,
-    centerDifferenceY: null
+    centerDifferenceX: 0,
+    centerDifferenceY: 0
 }
-axisCoords.centerDifferenceX = canvWidth / 2 - axisCoords.yAxis;
-axisCoords.centerDifferenceY = canvHeight / 2 - axisCoords.xAxis;
-console.log(axisCoords)
 
 drawAxis();
 
@@ -99,6 +107,9 @@ function redrawAxis(changedX, changedY, axisCoords) {
 }
 
 function drawGraph(getYFunc) {
+    if (getYFunc == null) {
+        return;
+    }
     //TODO: get correct prevPoint at start
     let prevPoint = getPrevPoint(-axisCoords.centerDifferenceX, getYFunc(-canvWidth / 2));
     
@@ -120,6 +131,7 @@ drawButton.onclick = () => {
     let formula = document.getElementById("formula").value;
     getYFunc = parseFunc(formula);
     drawGraph(getYFunc);
+    canvData.graphFunc = getYFunc;
 }
 
 canvas.onmousedown = (e) => {
@@ -135,7 +147,9 @@ canvas.onmousedown = (e) => {
         let changedX = pointerCoords.x - afterMoveCoords.x;
         let changedY = pointerCoords.y - afterMoveCoords.y;
         
+        ctx.clearRect(0,0, canvWidth, canvHeight);
         redrawAxis(changedX, changedY, axisCoords);
+        drawGraph(canvData.graphFunc);
         //update pointer coords
         pointerCoords.x = afterMoveCoords.x;
         pointerCoords.y = afterMoveCoords.y;
