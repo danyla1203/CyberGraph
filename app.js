@@ -106,7 +106,7 @@ function redrawAxis(changedX, changedY) {
     drawAxisX(canvData.axis.xAxis);
 }
 
-function getCanvYCoordFromGraphYCoord(graphY) {
+function getCanvYCoordFromGraphY(graphY) {
     if (graphY > 0) {
         return canvHeight / 2 - graphY - canvData.axis.centerDifferenceY
     } else {
@@ -114,21 +114,19 @@ function getCanvYCoordFromGraphYCoord(graphY) {
     }
 }
 
-function drawGraph(getYFunc) {
+function drawGraph(getYFunc, startPoint = 0) {
     if (getYFunc == null) {
         return;
     }
-    //TODO: get correct prevPoint at start
     let canvXOnStart = 0 - canvData.axis.centerDifferenceX;
-    let canvYOnStart = getCanvYCoordFromGraphYCoord(getYFunc(0 - canvWidth / 2))
+    let canvYOnStart = getCanvYCoordFromGraphY(getYFunc(0 - canvWidth / 2))
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
-    
-    for (let i = 1; i < canvWidth; i++) {
-        debugger
+    //render graph from startPoint to canvWidth + startPoint
+    for (let i = startPoint; i < canvWidth + startPoint; i++) {
         let graphX = i - canvWidth / 2;
-        let graphY = getYFunc(graphX);
+        let graphY = getYFunc(graphX);     
         let canvX = i - canvData.axis.centerDifferenceX;
-        let canvY = getCanvYCoordFromGraphYCoord(graphY);
+        let canvY = getCanvYCoordFromGraphY(graphY);
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(canvX, canvY);
     }
@@ -136,8 +134,7 @@ function drawGraph(getYFunc) {
 }
 
 drawButton.onclick = () => {
-    clearCanvas();
-
+    clearCanvas();  
     let formula = document.getElementById("formula").value;
     getYFunc = parseFunc(formula);
     drawGraph(getYFunc);
@@ -166,8 +163,7 @@ canvas.onmousedown = (e) => {
         //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
         canvData.axis.centerDifferenceX = canvWidth / 2 - canvData.axis.yAxis;
         canvData.axis.centerDifferenceY = canvHeight / 2 - canvData.axis.xAxis;
-
-        drawGraph(canvData.graphFunc);
+        drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
     }
 }
 
