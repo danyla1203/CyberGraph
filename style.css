@@ -9,6 +9,6 @@ body {
 }
 #input {
     position: fixed;
-    top: 90vh;
+    top: 10vh;
     width: 0;
 }
