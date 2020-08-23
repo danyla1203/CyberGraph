@@ -125,12 +125,34 @@ function drawGraph(getYFunc, startPoint = 0) {
     for (let i = startPoint; i < canvWidth + startPoint; i++) {
         let graphX = i - canvWidth / 2;
         let graphY = getYFunc(graphX);     
-        let canvX = i - canvData.axis.centerDifferenceX;
+        let canvX = i - canvData.axis.centerDifferenceX ;
         let canvY = getCanvYCoordFromGraphY(graphY);
         drawLine(canvX, canvY, prevPoint);
         prevPoint = getPrevPoint(canvX, canvY);
     }
     ctx.strokeStyle = "black";
+}
+
+
+
+function onMove(event, pointerCoords) {
+    const afterMoveCoords = {
+        x: event.screenX || event.changedTouches[0].clientX,
+        y: event.screenY || event.changedTouches[0].clientY, 
+    }
+    let changedX = pointerCoords.x - afterMoveCoords.x;
+    let changedY = pointerCoords.y - afterMoveCoords.y;
+
+    clearCanvas();
+    redrawAxis(changedX, changedY);
+
+    //update pointer coords
+    pointerCoords.x = afterMoveCoords.x;
+    pointerCoords.y = afterMoveCoords.y;
+    //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
+    canvData.axis.centerDifferenceX = canvWidth / 2 - canvData.axis.yAxis;
+    canvData.axis.centerDifferenceY = canvHeight / 2 - canvData.axis.xAxis;
+    drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
 
 drawButton.onclick = () => {
@@ -147,24 +169,25 @@ canvas.onmousedown = (e) => {
         x: e.screenX,
         y: e.screenY
     }
-    
     canvas.style.cursor = "move"
     canvas.onmousemove = (e) => {
-        const afterMoveCoords = { x: e.screenX, y: e.screenY }
-        let changedX = pointerCoords.x - afterMoveCoords.x;
-        let changedY = pointerCoords.y - afterMoveCoords.y;
-        
-        clearCanvas();
-        redrawAxis(changedX, changedY);
-
-        //update pointer coords
-        pointerCoords.x = afterMoveCoords.x;
-        pointerCoords.y = afterMoveCoords.y;
-        //calc difference between basic center ( canv width/height / 2 ) and center right now( axis coords )
-        canvData.axis.centerDifferenceX = canvWidth / 2 - canvData.axis.yAxis;
-        canvData.axis.centerDifferenceY = canvHeight / 2 - canvData.axis.xAxis;
-        drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
+        onMove(e, pointerCoords);
     }
+}
+
+canvas.ontouchstart = (e) => {
+    //cords, where mouse button is downed
+    const pointerCoords = {
+        x: e.changedTouches[0].clientX,
+        y: e.changedTouches[0].clientY
+    }
+    
+    canvas.ontouchmove = (e) => {
+        onMove(e, pointerCoords);
+    }
+}
+canvas.ontouchend = () => {
+    canvas.ontouchmove = null;
 }
 
 canvas.onmouseup = () => {
