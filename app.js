@@ -15,6 +15,7 @@ let canvData = {
         centerDifferenceY: 0
     },
     graphFunc: null,
+    scale: 50,
 }
 
 let axisCoords = {
@@ -123,8 +124,8 @@ function drawGraph(getYFunc, startPoint = 0) {
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     //render graph from startPoint to canvWidth + startPoint
     for (let i = startPoint; i < canvWidth + startPoint; i++) {
-        let graphX = i - canvWidth / 2;
-        let graphY = getYFunc(graphX);     
+        let graphX = (i - canvWidth / 2) / canvData.scale;
+        let graphY = getYFunc(graphX) * canvData.scale;  
         let canvX = i - canvData.axis.centerDifferenceX ;
         let canvY = getCanvYCoordFromGraphY(graphY);
         drawLine(canvX, canvY, prevPoint);
@@ -132,8 +133,6 @@ function drawGraph(getYFunc, startPoint = 0) {
     }
     ctx.strokeStyle = "black";
 }
-
-
 
 function onMove(event, pointerCoords) {
     const afterMoveCoords = {
@@ -161,6 +160,13 @@ drawButton.onclick = () => {
     getYFunc = parseFunc(formula);
     drawGraph(getYFunc);
     canvData.graphFunc = getYFunc;
+}
+
+canvas.onwheel = (e) => {
+    let newScale = e.wheelDelta;
+    canvData.scale += newScale;
+    clearCanvas();
+    drawGraph(canvData.graphFunc);
 }
 
 canvas.onmousedown = (e) => {
@@ -191,7 +197,6 @@ canvas.ontouchend = () => {
 }
 
 canvas.onmouseup = () => {
-    console.log(canvData.axis);
     canvas.onmousemove = null;
     canvas.style.cursor = "auto";
 }
