@@ -163,8 +163,14 @@ drawButton.onclick = () => {
 }
 
 canvas.onwheel = (e) => {
-    let newScale = e.wheelDelta;
-    canvData.scale += newScale;
+    let newScale = e.wheelDelta / 10;
+    
+    if(newScale < 0 && (newScale * -1) > canvData.scale) {
+        canvData.scale = canvData.scale / (newScale * -1);
+    } else {
+        canvData.scale += newScale;
+    }
+
     clearCanvas();
     drawGraph(canvData.graphFunc);
 }
