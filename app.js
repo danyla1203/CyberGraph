@@ -63,12 +63,12 @@ function clearCanvas() {
 }
 
 function clearAxisY(canvX) {
-    ctx.clearRect(canvX - 1, 0, 2, canvHeight / 2 -1);
-    ctx.clearRect(canvX -1, canvHeight / 2 - 1, 2, canvHeight);
+    ctx.clearRect(canvX - 1, 0, 20, canvHeight / 2 -1);
+    ctx.clearRect(canvX -1, canvHeight / 2 - 1, 20, canvHeight);
 }
 function clearAxisX(canvY) {
-    ctx.clearRect(0, canvY - 1, canvWidth / 2 + 1, 2);
-    ctx.clearRect(canvWidth / 2 + 1, canvY - 1, canvWidth / 2, 2);
+    ctx.clearRect(0, canvY - 1, canvWidth / 2 + 1, 20);
+    ctx.clearRect(canvWidth / 2 + 1, canvY - 1, canvWidth / 2, 20);
 }
 
 function drawAxisY(canvX) {
@@ -169,7 +169,6 @@ function onMove(event, pointerCoords) {
 
     clearCanvas();
     redrawAxis(changedX, changedY);
-
     //update pointer coords
     pointerCoords.x = afterMoveCoords.x;
     pointerCoords.y = afterMoveCoords.y;
