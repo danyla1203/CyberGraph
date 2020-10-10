@@ -123,7 +123,7 @@ function drawGraph(getYFunc, startPoint = 0) {
     let canvYOnStart = getCanvYCoordFromGraphY(getYFunc(0 - canvWidth / 2))
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     //render graph from startPoint to canvWidth + startPoint
-    for (let i = startPoint; i < canvWidth + startPoint; i++) {
+    for (let i = startPoint; i < canvWidth + startPoint; i += 2) {
         let graphX = (i - canvWidth / 2) / canvData.scale;
         let graphY = getYFunc(graphX) * canvData.scale;  
         let canvX = i - canvData.axis.centerDifferenceX ;
