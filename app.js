@@ -46,6 +46,10 @@ function drawLine(canvX, canvY, prevPoint) {
     ctx.stroke();
 }
 
+function drawText(canvX, canvY, text) {
+    ctx.strokeText(text, canvX, canvY);
+}
+
 function getPrevPoint(canvX, canvY) {
     return {
         canvX: canvX,
@@ -72,12 +76,33 @@ function drawAxisY(canvX) {
     ctx.moveTo(canvX, 0);
     ctx.lineTo(canvX, canvHeight);
     ctx.stroke();
+
+    ctx.font = "10px serif";
+    let iterationCount = parseInt((canvData.axis.xAxis + canvData.axis.centerDifferenceY) / canvData.scale);
+    console.log(iterationCount * -1, "Y");
+    console.log(canvData.axis);
+    for (let i = 1; i <= iterationCount; i++) {
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale, i);
+    }
+    for (let i = 1; i <= iterationCount; i++) {
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale, i * -1)
+    }
 }
 function drawAxisX(canvY) {
     ctx.beginPath();
     ctx.moveTo(0, canvY);
     ctx.lineTo(canvWidth, canvY);
     ctx.stroke();
+
+    ctx.font = "10px serif";
+    let iterationCount = parseInt((canvData.axis.yAxis + canvData.axis.centerDifferenceX) / canvData.scale);
+    console.log(iterationCount * -1);
+    for (let i = 0; i <= iterationCount; i++) {
+        drawText(canvData.axis.yAxis - i * canvData.scale, canvData.axis.xAxis + 10, i * -1);
+    }
+    for (let i = 1; i <= iterationCount; i++) {
+        drawText(canvData.axis.yAxis + i * canvData.scale, canvData.axis.xAxis + 10, i);
+    }
 }
 
 function redrawAxis(changedX, changedY) {
