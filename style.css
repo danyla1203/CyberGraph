@@ -5,10 +5,16 @@ body {
 }
 * {
     margin: 0;
+    overflow: hidden;
     padding: 0;
+}
+#graph {
+    width: 100vw;
+    height: 100vh;
 }
 #input {
     position: fixed;
     top: 10vh;
     width: 0;
+    overflow: visible;
 }
