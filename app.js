@@ -119,7 +119,7 @@ function drawGraph(getYFunc, startPoint = 0) {
     if (getYFunc == null) {
         return;
     }
-    let canvXOnStart = 0 - canvData.axis.centerDifferenceX;
+    let canvXOnStart = 0
     let canvYOnStart = getCanvYCoordFromGraphY(getYFunc(0 - canvWidth / 2))
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     //render graph from startPoint to canvWidth + startPoint
@@ -158,7 +158,7 @@ drawButton.onclick = () => {
     clearCanvas();  
     let formula = document.getElementById("formula").value;
     getYFunc = parseFunc(formula);
-    drawGraph(getYFunc);
+    drawGraph(getYFunc, canvData.axis.centerDifferenceX);
     canvData.graphFunc = getYFunc;
 }
 
@@ -172,7 +172,7 @@ canvas.onwheel = (e) => {
     }
 
     clearCanvas();
-    drawGraph(canvData.graphFunc);
+    drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
 
 canvas.onmousedown = (e) => {
