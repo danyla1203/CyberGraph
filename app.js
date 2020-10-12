@@ -78,8 +78,8 @@ function drawAxisY(canvX) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((canvData.axis.xAxis + canvData.axis.centerDifferenceY) / canvData.scale);
-    console.log(iterationCount * -1, "Y");
+    let iterationCount = parseInt((Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale);
+    console.log(iterationCount, "y");
     console.log(canvData.axis);
     for (let i = 1; i <= iterationCount; i++) {
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale, i);
@@ -95,8 +95,8 @@ function drawAxisX(canvY) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((canvData.axis.yAxis + canvData.axis.centerDifferenceX) / canvData.scale);
-    console.log(iterationCount * -1);
+    let iterationCount = parseInt((Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale);
+    console.log(iterationCount, "x");
     for (let i = 0; i <= iterationCount; i++) {
         drawText(canvData.axis.yAxis - i * canvData.scale, canvData.axis.xAxis + 10, i * -1);
     }
