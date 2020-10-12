@@ -84,7 +84,7 @@ function drawAxisY(canvX) {
     for (let i = 1; i <= iterationCount; i++) {
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale, i);
     }
-    for (let i = 1; i <= iterationCount; i++) {
+    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i++) {
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale, i * -1)
     }
 }
@@ -100,7 +100,7 @@ function drawAxisX(canvY) {
     for (let i = 0; i <= iterationCount; i++) {
         drawText(canvData.axis.yAxis - i * canvData.scale, canvData.axis.xAxis + 10, i * -1);
     }
-    for (let i = 1; i <= iterationCount; i++) {
+    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i++) {
         drawText(canvData.axis.yAxis + i * canvData.scale, canvData.axis.xAxis + 10, i);
     }
 }
