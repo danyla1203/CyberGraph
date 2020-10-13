@@ -85,10 +85,15 @@ function drawAxisY(canvX) {
     ctx.font = "10px serif";
     let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, i);
+        let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
+        let text = ("" + i).substring(0, halfNumLen);
+        debugger;
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, text);
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale.scale, i * -1)
+        let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
+        let text = ("" + i).substring(0, halfNumLen);
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale.scale, text * -1)
     }
 }
 function drawAxisX(canvY) {
@@ -100,9 +105,13 @@ function drawAxisX(canvY) {
     ctx.font = "10px serif";
     let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+        let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
+        let text = ("" + i).substring(0, halfNumLen);
         drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, i * -1);
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
+        let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
+        let text = ("" + i).substring(0, halfNumLen);
         drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, i);
     }
 }
@@ -203,6 +212,11 @@ canvas.onwheel = (e) => {
         canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep / 2;
         canvData.scale.upperLimit += 150 + canvData.scale.lowerLimit;
         canvData.scale.lowerLimit += 150;
+    }
+    if (canvData.scale.scale < canvData.scale.lowerLimit) {
+        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep * 2;
+        canvData.scale.upperLimit -= 150
+        canvData.scale.lowerLimit -= 150
     }
 
     clearCanvas();
