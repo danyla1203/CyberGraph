@@ -17,6 +17,8 @@ let canvData = {
     graphFunc: null,
     scale: {
         scale: 50,
+        upperLimit: 150,
+        lowerLimit: 0,
         scaleIterationStep: 1,
     },
 }
@@ -66,12 +68,12 @@ function clearCanvas() {
 }
 
 function clearAxisY(canvX) {
-    ctx.clearRect(canvX - 1, 0, 20, canvHeight / 2 -1);
-    ctx.clearRect(canvX -1, canvHeight / 2 - 1, 20, canvHeight);
+    ctx.clearRect(canvX - 1, 0, 50, canvHeight / 2 -1);
+    ctx.clearRect(canvX -1, canvHeight / 2 - 1, 50, canvHeight);
 }
 function clearAxisX(canvY) {
-    ctx.clearRect(0, canvY - 1, canvWidth / 2 + 1, 20);
-    ctx.clearRect(canvWidth / 2 + 1, canvY - 1, canvWidth / 2, 20);
+    ctx.clearRect(0, canvY - 1, canvWidth / 2 + 1, 50);
+    ctx.clearRect(canvWidth / 2 + 1, canvY - 1, canvWidth / 2, 50);
 }
 
 function drawAxisY(canvX) {
@@ -81,11 +83,11 @@ function drawAxisY(canvX) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale);
-    for (let i = 1; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+    let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
+    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, i);
     }
-    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
+    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale.scale, i * -1)
     }
 }
@@ -96,11 +98,11 @@ function drawAxisX(canvY) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale);
+    let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, i * -1);
     }
-    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
+    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
         drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, i);
     }
 }
@@ -194,7 +196,15 @@ canvas.onwheel = (e) => {
     } else {
         canvData.scale.scale += newScale;
     }
+    canvData.scale.scale = parseInt(canvData.scale.scale);
     console.log(canvData.scale);
+
+    if(canvData.scale.scale > canvData.scale.upperLimit) {
+        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep / 2;
+        canvData.scale.upperLimit += 150 + canvData.scale.lowerLimit;
+        canvData.scale.lowerLimit += 150;
+    }
+
     clearCanvas();
     drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
