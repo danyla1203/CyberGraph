@@ -15,7 +15,10 @@ let canvData = {
         centerDifferenceY: 0
     },
     graphFunc: null,
-    scale: 50,
+    scale: {
+        scale: 50,
+        scaleIterationStep: 1,
+    },
 }
 
 let axisCoords = {
@@ -78,14 +81,12 @@ function drawAxisY(canvX) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale);
-    console.log(iterationCount, "y");
-    console.log(canvData.axis);
-    for (let i = 1; i <= iterationCount; i++) {
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale, i);
+    let iterationCount = parseInt((Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale);
+    for (let i = 1; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, i);
     }
-    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i++) {
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale, i * -1)
+    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
+        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale.scale, i * -1)
     }
 }
 function drawAxisX(canvY) {
@@ -95,13 +96,12 @@ function drawAxisX(canvY) {
     ctx.stroke();
 
     ctx.font = "10px serif";
-    let iterationCount = parseInt((Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale);
-    console.log(iterationCount, "x");
-    for (let i = 0; i <= iterationCount; i++) {
-        drawText(canvData.axis.yAxis - i * canvData.scale, canvData.axis.xAxis + 10, i * -1);
+    let iterationCount = parseInt((Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale);
+    for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+        drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, i * -1);
     }
-    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i++) {
-        drawText(canvData.axis.yAxis + i * canvData.scale, canvData.axis.xAxis + 10, i);
+    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
+        drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, i);
     }
 }
 
@@ -149,8 +149,8 @@ function drawGraph(getYFunc, startPoint = 0) {
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     //render graph from startPoint to canvWidth + startPoint
     for (let i = startPoint; i < canvWidth + startPoint; i += 2) {
-        let graphX = (i - canvWidth / 2) / canvData.scale;
-        let graphY = getYFunc(graphX) * canvData.scale;  
+        let graphX = (i - canvWidth / 2) / canvData.scale.scale;
+        let graphY = getYFunc(graphX) * canvData.scale.scale;  
         let canvX = i - canvData.axis.centerDifferenceX ;
         let canvY = getCanvYCoordFromGraphY(graphY);
         drawLine(canvX, canvY, prevPoint);
@@ -188,13 +188,13 @@ drawButton.onclick = () => {
 
 canvas.onwheel = (e) => {
     let newScale = e.wheelDelta / 10;
-    
-    if(newScale < 0 && (newScale * -1) > canvData.scale) {
-        canvData.scale = canvData.scale / (newScale * -1);
-    } else {
-        canvData.scale += newScale;
-    }
 
+    if(newScale < 0 && (newScale * -1) > canvData.scale.scale) {
+        canvData.scale.scale = canvData.scale.scale / (newScale * -1);
+    } else {
+        canvData.scale.scale += newScale;
+    }
+    console.log(canvData.scale);
     clearCanvas();
     drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
