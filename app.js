@@ -87,7 +87,6 @@ function drawAxisY(canvX) {
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
         let text = ("" + i).substring(0, halfNumLen);
-        debugger;
         drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, text);
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
@@ -107,12 +106,12 @@ function drawAxisX(canvY) {
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
         let text = ("" + i).substring(0, halfNumLen);
-        drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, i * -1);
+        drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, text * -1);
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
         let halfNumLen = Math.ceil((("" + i).length / 2) + 1);
         let text = ("" + i).substring(0, halfNumLen);
-        drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, i);
+        drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, text);
     }
 }
 
@@ -210,12 +209,13 @@ canvas.onwheel = (e) => {
 
     if(canvData.scale.scale > canvData.scale.upperLimit) {
         canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep / 2;
-        canvData.scale.upperLimit += 150 + canvData.scale.lowerLimit;
-        canvData.scale.lowerLimit += 150;
+        let lowerLimit = canvData.scale.lowerLimit;
+        canvData.scale.lowerLimit = canvData.scale.upperLimit;
+        canvData.scale.upperLimit += 150 + lowerLimit;
     }
     if (canvData.scale.scale < canvData.scale.lowerLimit) {
         canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep * 2;
-        canvData.scale.upperLimit -= 150
+        canvData.scale.upperLimit -= canvData.scale.lowerLimit;
         canvData.scale.lowerLimit -= 150
     }
 
