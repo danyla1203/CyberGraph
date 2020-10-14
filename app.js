@@ -19,6 +19,7 @@ let canvData = {
         scale: 50,
         upperLimit: 150,
         lowerLimit: 0,
+        factor: 2,
         scaleIterationStep: 1,
     },
 }
@@ -188,6 +189,16 @@ function onMove(event, pointerCoords) {
     drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
 
+function nextScaleFactor() {
+    if(canvData.scale.factor == 2) {
+        canvData.scale.factor = 5;
+    } else if (canvData.scale.factor == 5) {
+        canvData.scale.factor = 10;
+    } else if (canvData.scale.factor == 10) {
+        canvData.scale.factor = 2;
+    }
+}
+
 drawButton.onclick = () => {
     clearCanvas();  
     let formula = document.getElementById("formula").value;
@@ -208,15 +219,17 @@ canvas.onwheel = (e) => {
     console.log(canvData.scale);
 
     if(canvData.scale.scale > canvData.scale.upperLimit) {
-        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep / 2;
+        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep / canvData.scale.factor;
         let lowerLimit = canvData.scale.lowerLimit;
         canvData.scale.lowerLimit = canvData.scale.upperLimit;
-        canvData.scale.upperLimit += 150 + lowerLimit;
+        canvData.scale.upperLimit += 250 + lowerLimit;
+        nextScaleFactor();
     }
     if (canvData.scale.scale < canvData.scale.lowerLimit) {
-        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep * 2;
+        canvData.scale.scaleIterationStep = canvData.scale.scaleIterationStep * canvData.scale.factor;
         canvData.scale.upperLimit -= canvData.scale.lowerLimit;
-        canvData.scale.lowerLimit -= 150
+        canvData.scale.lowerLimit -= 150;
+        nextScaleFactor();
     }
 
     clearCanvas();
