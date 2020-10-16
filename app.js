@@ -229,9 +229,8 @@ canvas.onwheel = (e) => {
     }
     if (canvData.scale.scale < canvData.scale.lowerLimit) {
         canvData.scale.scaleIterationStep = canvData.scale.allegedUnit * canvData.scale.factor;
-        debugger;
-        canvData.scale.upperLimit -= canvData.scale.lowerLimit;
-        canvData.scale.lowerLimit -= 150;
+        canvData.scale.upperLimit = canvData.scale.lowerLimit;
+        canvData.scale.lowerLimit -= 250
         nextScaleFactor("mul");
         debugger;
     }
