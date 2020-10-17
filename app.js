@@ -18,7 +18,7 @@ let canvData = {
     scale: {
         allegedUnit: 1,
         scaleIterationStep: 1,
-        scale: 50,
+        scale: 100,
         upperLimit: 150,
         lowerLimit: 0,
         factor: 2,
@@ -84,7 +84,7 @@ function drawAxisY(canvX) {
     ctx.lineTo(canvX, canvHeight);
     ctx.stroke();
 
-    ctx.font = "10px serif";
+    ctx.font = "100 10px sans-serif";
     let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
@@ -101,7 +101,7 @@ function drawAxisX(canvY) {
     ctx.lineTo(canvWidth, canvY);
     ctx.stroke();
 
-    ctx.font = "10px serif";
+    ctx.font = "100 9px sans-serif";
     let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
