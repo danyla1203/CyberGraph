@@ -1,6 +1,8 @@
 const drawButton = document.getElementById("drawBtn");
 const canvas = document.getElementById("graph");
 const ctx = canvas.getContext("2d");
+ctx.font = "100 9px sans-serif";
+
 canvas.width  = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -45,16 +47,8 @@ function drawAxis() {
     drawAxisY(canvData.axis.yAxis);
 }
 
-function drawLine(canvX, canvY, prevPoint) {    
-    ctx.strokeStyle = "orange";
-    ctx.beginPath();
-    ctx.moveTo(prevPoint.canvX, prevPoint.canvY);
-    ctx.lineTo(canvX, canvY);
-    ctx.stroke();
-}
-
 function drawText(canvX, canvY, text) {
-    ctx.strokeText(text, canvX, canvY);
+    ctx.fillText(text, canvX, canvY);
 }
 
 function getPrevPoint(canvX, canvY) {
@@ -84,15 +78,14 @@ function drawAxisY(canvX) {
     ctx.lineTo(canvX, canvHeight);
     ctx.stroke();
 
-    ctx.font = "100 10px sans-serif";
     let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis - i * canvData.scale.scale, text * 1);
+        drawText(Math.floor(canvData.axis.yAxis + 3), Math.floor(canvData.axis.xAxis - i * canvData.scale.scale), text * 1 + "");
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6)
-        drawText(canvData.axis.yAxis + 3, canvData.axis.xAxis + i * canvData.scale.scale, text * -1)
+        drawText(Math.floor(canvData.axis.yAxis + 3), Math.floor(canvData.axis.xAxis + i * canvData.scale.scale), text * -1  + "")
     }
 }
 function drawAxisX(canvY) {
@@ -100,16 +93,15 @@ function drawAxisX(canvY) {
     ctx.moveTo(0, canvY);
     ctx.lineTo(canvWidth, canvY);
     ctx.stroke();
-
-    ctx.font = "100 9px sans-serif";
+    
     let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(canvData.axis.yAxis - i * canvData.scale.scale, canvData.axis.xAxis + 10, text * -1);
+        drawText(Math.floor(canvData.axis.yAxis - i * canvData.scale.scale), canvData.axis.xAxis + 10, text * -1 + "");
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(canvData.axis.yAxis + i * canvData.scale.scale, canvData.axis.xAxis + 10, text * 1);
+        drawText(Math.floor(canvData.axis.yAxis + i * canvData.scale.scale), canvData.axis.xAxis + 10, text * 1 + "");
     }
 }
 
@@ -136,8 +128,12 @@ function redrawAxis(changedX, changedY) {
     }
 
     //draw new axis
+    let t;
+    console.time(t);
     drawAxisY(canvData.axis.yAxis);
     drawAxisX(canvData.axis.xAxis);
+    console.timeEnd(t)
+    console.log("nums");
 }
 
 function getCanvYCoordFromGraphY(graphY) {
@@ -148,6 +144,18 @@ function getCanvYCoordFromGraphY(graphY) {
     }
 }
 
+function setBegin(prevPoint) {
+    ctx.beginPath();
+    ctx.moveTo(prevPoint.canvX, prevPoint.canvY);
+}
+
+function setPoint(canvX, canvY) {
+    ctx.lineTo(canvX, canvY);
+}
+function drawLine() {
+    ctx.stroke();
+}
+
 function drawGraph(getYFunc, startPoint = 0) {
     if (getYFunc == null) {
         return;
@@ -156,14 +164,17 @@ function drawGraph(getYFunc, startPoint = 0) {
     let canvYOnStart = getCanvYCoordFromGraphY(getYFunc(0 - canvWidth / 2))
     let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
     //render graph from startPoint to canvWidth + startPoint
-    for (let i = startPoint; i < canvWidth + startPoint; i += 2) {
+    setBegin(prevPoint);
+    for (let i = startPoint; i < canvWidth + startPoint; i++) {
         let graphX = (i - canvWidth / 2) / canvData.scale.scale;
         let graphY = getYFunc(graphX) * canvData.scale.scale;  
-        let canvX = i - canvData.axis.centerDifferenceX ;
-        let canvY = getCanvYCoordFromGraphY(graphY);
-        drawLine(canvX, canvY, prevPoint);
+        let canvX = Math.floor(i - canvData.axis.centerDifferenceX);
+        let canvY = Math.floor(getCanvYCoordFromGraphY(graphY));
+        
+        setPoint(canvX, canvY);
         prevPoint = getPrevPoint(canvX, canvY);
     }
+    drawLine()
     ctx.strokeStyle = "black";
 }
 
@@ -232,7 +243,6 @@ canvas.onwheel = (e) => {
         canvData.scale.upperLimit = canvData.scale.lowerLimit;
         canvData.scale.lowerLimit -= 250
         nextScaleFactor("mul");
-        debugger;
     }
     
     clearCanvas();
@@ -247,7 +257,10 @@ canvas.onmousedown = (e) => {
     }
     canvas.style.cursor = "move"
     canvas.onmousemove = (e) => {
+        let time;
+        console.time(time);
         onMove(e, pointerCoords);
+        console.timeEnd(time);
     }
 }
 
