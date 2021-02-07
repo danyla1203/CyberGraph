@@ -79,13 +79,17 @@ function drawAxisY(canvX) {
     ctx.stroke();
 
     let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
-    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+    for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(Math.floor(canvData.axis.yAxis + 3), Math.floor(canvData.axis.xAxis - i * canvData.scale.scale), text * 1 + "");
+        let textY = Math.floor(canvData.axis.xAxis - i * canvData.scale.scale);
+        if (textY < 0 || textY > 1100) { continue }
+        drawText(Math.floor(canvData.axis.yAxis + 3), textY, text * 1 + "");
     }
     for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6)
-        drawText(Math.floor(canvData.axis.yAxis + 3), Math.floor(canvData.axis.xAxis + i * canvData.scale.scale), text * -1  + "")
+        let textY = Math.floor(canvData.axis.xAxis + i * canvData.scale.scale);
+        if (textY < 0 || textY > 1100) { continue }
+        drawText(Math.floor(canvData.axis.yAxis + 3), textY, text * -1  + "")
     }
 }
 function drawAxisX(canvY) {
@@ -95,13 +99,17 @@ function drawAxisX(canvY) {
     ctx.stroke();
     
     let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
-    for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+    for (let i = 1; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(Math.floor(canvData.axis.yAxis - i * canvData.scale.scale), canvData.axis.xAxis + 10, text * -1 + "");
+        let textX = Math.floor(canvData.axis.yAxis - i * canvData.scale.scale);
+        if (textX < 0 || textX > 1100) { continue }
+        drawText(textX, canvData.axis.xAxis + 10, text * -1 + "");
     }
-    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
+    for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        drawText(Math.floor(canvData.axis.yAxis + i * canvData.scale.scale), canvData.axis.xAxis + 10, text * 1 + "");
+        let textX = Math.floor(canvData.axis.yAxis + i * canvData.scale.scale);
+        if ( textX > 1900) { continue }
+        drawText(textX, canvData.axis.xAxis + 10, text * 1 + "");
     }
 }
 
@@ -129,11 +137,10 @@ function redrawAxis(changedX, changedY) {
 
     //draw new axis
     let t;
-    console.time(t);
+    
     drawAxisY(canvData.axis.yAxis);
     drawAxisX(canvData.axis.xAxis);
-    console.timeEnd(t)
-    console.log("nums");
+   
 }
 
 function getCanvYCoordFromGraphY(graphY) {
@@ -187,6 +194,7 @@ function onMove(event, pointerCoords) {
     let changedY = pointerCoords.y - afterMoveCoords.y;
 
     clearCanvas();
+
     redrawAxis(changedX, changedY);
     //update pointer coords
     pointerCoords.x = afterMoveCoords.x;
@@ -229,7 +237,6 @@ canvas.onwheel = (e) => {
         canvData.scale.scale += newScale;
     }
     canvData.scale.scale = parseInt(canvData.scale.scale);
-    console.log(canvData.scale);
 
     if(canvData.scale.scale > canvData.scale.upperLimit) {
         canvData.scale.scaleIterationStep = canvData.scale.allegedUnit / canvData.scale.factor;
@@ -258,9 +265,9 @@ canvas.onmousedown = (e) => {
     canvas.style.cursor = "move"
     canvas.onmousemove = (e) => {
         let time;
-        console.time(time);
+        
         onMove(e, pointerCoords);
-        console.timeEnd(time);
+        
     }
 }
 
