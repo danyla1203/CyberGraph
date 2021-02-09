@@ -48,7 +48,7 @@ function drawAxis() {
 }
 
 function drawText(canvX, canvY, text) {
-    ctx.fillText(text, canvX, canvY);
+    ctx.fillText(text + "", parseInt(canvX), parseInt(canvY));
 }
 
 function getPrevPoint(canvX, canvY) {
@@ -77,18 +77,25 @@ function drawAxisY(canvX) {
     ctx.moveTo(canvX, 0);
     ctx.lineTo(canvX, canvHeight);
     ctx.stroke();
-
+    
     let iterationCount = (Math.abs(canvData.axis.xAxis) + Math.abs(canvData.axis.centerDifferenceY)) / canvData.scale.scale;
+    //console.log(iterationCount);
+    if (canvData.axis.xAxis > 0) {
+        for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
+            let text = i.toFixed(4);
+            let textY = Math.floor(canvData.axis.xAxis - i * canvData.scale.scale);
+            if (textY < 0 || textY > 1100) { continue }
+            //console.log(textY, "y");
+            drawText(Math.floor(canvData.axis.yAxis + 3), textY, text * 1 + "");
+        }
+    }
+    if (canvData.axis.xAxis > 1000) {return}
+    console.log(iterationCount, canvData.scale.scaleIterationStep);
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
-        let textY = Math.floor(canvData.axis.xAxis - i * canvData.scale.scale);
-        if (textY < 0 || textY > 1100) { continue }
-        drawText(Math.floor(canvData.axis.yAxis + 3), textY, text * 1 + "");
-    }
-    for (let i = 0 + canvData.scale.scaleIterationStep; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceY); i += canvData.scale.scaleIterationStep) {
-        let text = i.toFixed(6)
         let textY = Math.floor(canvData.axis.xAxis + i * canvData.scale.scale);
         if (textY < 0 || textY > 1100) { continue }
+        console.log(textY);
         drawText(Math.floor(canvData.axis.yAxis + 3), textY, text * -1  + "")
     }
 }
@@ -103,12 +110,14 @@ function drawAxisX(canvY) {
         let text = i.toFixed(6);
         let textX = Math.floor(canvData.axis.yAxis - i * canvData.scale.scale);
         if (textX < 0 || textX > 1100) { continue }
+        //console.log(textX, "x1")
         drawText(textX, canvData.axis.xAxis + 10, text * -1 + "");
     }
     for (let i = 1; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
         let text = i.toFixed(6);
         let textX = Math.floor(canvData.axis.yAxis + i * canvData.scale.scale);
-        if ( textX > 1900) { continue }
+        if (textX > 1900) { continue }
+        //console.log(textX, "x2")
         drawText(textX, canvData.axis.xAxis + 10, text * 1 + "");
     }
 }
@@ -242,7 +251,7 @@ canvas.onwheel = (e) => {
         canvData.scale.scaleIterationStep = canvData.scale.allegedUnit / canvData.scale.factor;
         let lowerLimit = canvData.scale.lowerLimit;
         canvData.scale.lowerLimit = canvData.scale.upperLimit;
-        canvData.scale.upperLimit += 150 + lowerLimit * 2;
+        canvData.scale.upperLimit += 250 + lowerLimit * 2;
         nextScaleFactor("div");
     }
     if (canvData.scale.scale < canvData.scale.lowerLimit) {
