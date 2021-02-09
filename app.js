@@ -103,14 +103,18 @@ function drawAxisX(canvY) {
     ctx.stroke();
     
     let iterationCount = (Math.abs(canvData.axis.yAxis) + Math.abs(canvData.axis.centerDifferenceX)) / canvData.scale.scale;
+    console.log(iterationCount, "iteration count");
     for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         if (i == 0) { continue } 
         let text = i.toFixed(6);
         let textX = Math.floor(canvData.axis.yAxis - i * canvData.scale.scale);
-        if (textX < 0 || textX > 1100) { continue }
+        if (textX < 0 || textX > 1900) { continue }
+        console.log(textX);
         drawText(textX, canvData.axis.xAxis + 10, text * -1 + "");
     }
-    for (let i = 0; i <= iterationCount + Math.abs(canvData.axis.centerDifferenceX); i += canvData.scale.scaleIterationStep) {
+    if (canvData.yAxis > 0) { return };
+    iterationCount += Math.abs(canvData.axis.centerDifferenceX) / canvData.scale.scale;
+    for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
         if (i == 0) { continue } 
         let text = i.toFixed(6);
         let textX = Math.floor(canvData.axis.yAxis + i * canvData.scale.scale);
