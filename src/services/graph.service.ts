@@ -1,38 +1,28 @@
-import { canvData } from "../canvas";
-import { drawLine, setBegin, setPoint } from "../canvasView";
+import { canvData } from '../canvas';
+import { drawLine, setBegin, setPoint } from '../canvasView';
 
-function getCanvYCoordFromGraphY(graphY: number) {
-  if (graphY > 0) {
-    return canvData.height / 2 - graphY - canvData.axis.centerDifferenceY;
+function getCanvYCoordFromGraphY(y: number) {
+  if (y > 0) {
+    return canvData.height / 2 - y - canvData.axis.centerDifferenceY;
   } else {
-    return canvData.height / 2 + graphY * -1 - canvData.axis.centerDifferenceY;
+    return canvData.height / 2 + y * -1 - canvData.axis.centerDifferenceY;
   }
 }
 
-function getPrevPoint(canvX: any, canvY: any) {
-  return {
-    canvX: canvX,
-    canvY: canvY,
-  };
-}
-
-export function drawGraph(getYFunc: any, startPoint = 0) {
-  if (getYFunc == null) {
-    return;
-  }
-  let canvXOnStart = 0;
-  let canvYOnStart = getCanvYCoordFromGraphY(getYFunc(0 - canvData.width / 2));
-  let prevPoint = getPrevPoint(canvXOnStart, canvYOnStart);
+export function drawGraph(func: (x) => number, startPoint = 0) {
+  if (func === null) return;
+  const startXCoord = 0;
+  const startYCoord = getCanvYCoordFromGraphY(func(0));
+  let prevPoint = { canvX: startXCoord, canvY: startYCoord };
   //render graph from startPoint to canvWidth + startPoint
   setBegin(prevPoint);
   for (let i = startPoint; i < canvData.width + startPoint; i++) {
-    let graphX = (i - canvData.width / 2) / canvData.scale.scale;
-    let graphY = getYFunc(graphX) * canvData.scale.scale;
-    let canvX = Math.floor(i - canvData.axis.centerDifferenceX);
-    let canvY = Math.floor(getCanvYCoordFromGraphY(graphY));
-
-    setPoint(canvX, canvY);
-    prevPoint = getPrevPoint(canvX, canvY);
+    const x = (i - canvData.width / 2) / canvData.scale.scale;
+    const y = func(x) * canvData.scale.scale;
+    const onCanvasX = Math.floor(i - canvData.axis.centerDifferenceX);
+    const onCanvasY = Math.floor(getCanvYCoordFromGraphY(y));
+    setPoint(onCanvasX, onCanvasY);
+    prevPoint = { canvX: onCanvasX, canvY: onCanvasY };
   }
   drawLine();
 }

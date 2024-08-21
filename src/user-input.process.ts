@@ -78,7 +78,7 @@ function parseFunc(func: string) {
 
 export function buttonClick() {
   redrawCanvas();
-  const getYFunc = parseFunc(graphInput?.value);
-  drawGraph(getYFunc, canvData.axis.centerDifferenceX);
-  canvData.graphFunc = getYFunc;
+  const func = parseFunc(graphInput?.value);
+  drawGraph(func, canvData.axis.centerDifferenceX);
+  canvData.graphFunc = func;
 }
