@@ -7,19 +7,10 @@ import {
 } from '../canvasView';
 import { canvData } from '../canvas';
 
-const canvWidth = window.innerWidth;
-const canvHeight = window.innerHeight;
-
-let axisData = {
-  yAxis: canvWidth / 2,
-  xAxis: canvHeight / 2,
-  centerDifferenceX: 0,
-  centerDifferenceY: 0,
-};
-
+const axisData = canvData.axis;
 
 function makeAxisY(canvX: number) {
-  drawAxisLineY(canvX, canvHeight);
+  drawAxisLineY(canvX, canvData.width);
   let iterationCount =
     (Math.abs(axisData.xAxis) + Math.abs(axisData.centerDifferenceY)) /
     canvData.scale.scale;
@@ -29,12 +20,11 @@ function makeAxisY(canvX: number) {
       i <= iterationCount;
       i += canvData.scale.scaleIterationStep
     ) {
-      let text = i.toFixed(4);
       let textY = Math.floor(axisData.xAxis - i * canvData.scale.scale);
       if (textY < 0 || textY > 1100) {
         continue;
       }
-      drawText(Math.floor(axisData.yAxis + 3), textY, text);
+      drawText(Math.floor(axisData.yAxis + 3), textY, i);
     }
   }
   if (axisData.xAxis > 1000) {
@@ -42,40 +32,34 @@ function makeAxisY(canvX: number) {
   }
   iterationCount += Math.abs(axisData.centerDifferenceY) / canvData.scale.scale;
   for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
-    let text = i.toFixed(6);
     let textY = Math.floor(axisData.xAxis + i * canvData.scale.scale);
     if (textY < 0 || textY > 1100) {
       continue;
     }
-    drawText(Math.floor(axisData.yAxis + 3), textY, `-${text}`);
+    drawText(Math.floor(axisData.yAxis + 3), textY, i);
   }
 }
 function makeAxisX(canvY: number) {
-  drawAxisLineX(canvY, canvWidth);
+  drawAxisLineX(canvY, canvData.width);
   let iterationCount =
     (Math.abs(axisData.yAxis) + Math.abs(axisData.centerDifferenceX)) /
     canvData.scale.scale;
-  for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
-    if (i == 0) continue;
-    const text = i.toFixed(6);
+  for (let i = 1; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
     const textX = Math.floor(axisData.yAxis - i * canvData.scale.scale);
     if (textX < 0 || textX > 1900) continue;
-    drawText(textX , axisData.xAxis + 10, `-${text}`);
+    drawText(textX , axisData.xAxis + 10, i);
   }
-  if (canvData.axis.yAxis > 0) return;
   iterationCount += Math.abs(axisData.centerDifferenceX) / canvData.scale.scale;
-  for (let i = 0; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
-    if (i == 0) continue;
-    let text = i.toFixed(6);
+  for (let i = 1; i <= iterationCount; i += canvData.scale.scaleIterationStep) {
     let textX = Math.floor(axisData.yAxis + i * canvData.scale.scale);
     if (textX > 1900) continue;
-    drawText(textX, axisData.xAxis + 10, text);
+    drawText(textX, axisData.xAxis + 10, i);
   }
 }
 
 export function drawAxis() {
   makeAxisX(axisData.xAxis);
-  makeAxisX(axisData.yAxis);
+  makeAxisY(axisData.yAxis);
 }
 
 export function redrawAxis(changedX: number, changedY: number) {

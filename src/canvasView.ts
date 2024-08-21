@@ -8,7 +8,7 @@ const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 export function drawText(
   canvX: any,
   canvY: any,
-  text: string,
+  text: number,
 ) {
   ctx.fillText(text + '', canvX, canvY);
 }

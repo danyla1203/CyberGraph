@@ -3,6 +3,9 @@ const canvas = document.querySelector<HTMLCanvasElement>(
 ) as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
 const canvHeight = canvas.height;
 const canvWidth = canvas.width;
 
