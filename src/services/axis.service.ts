@@ -5,7 +5,7 @@ import {
   drawAxisLineX,
   drawAxisLineY,
 } from '../canvasView';
-import { canvData } from '../canvas';
+import { canvData, ctx } from '../canvas';
 
 const axisData = canvData.axis;
 
@@ -16,7 +16,7 @@ function drawNumbersX() {
         canvData.numberLine[number] *
           canvData.scale.viewMulti *
           canvData.scale.allegedUnit,
-      axisData.xAxis + 13,
+      axisData.xAxis + 15,
       -parseInt(number),
     );
     drawText(
@@ -24,7 +24,7 @@ function drawNumbersX() {
         canvData.numberLine[number] *
           canvData.scale.viewMulti *
           canvData.scale.allegedUnit,
-      axisData.xAxis + 13,
+      axisData.xAxis + 15,
       parseInt(number),
     );
   }
@@ -33,19 +33,19 @@ function drawNumbersY() {
   for (const number in canvData.numberLine) {
     if (parseInt(number) === 0) continue;
     drawText(
-      axisData.yAxis + 5,
+      axisData.yAxis - 15,
       canvData.axis.xAxis -
         canvData.numberLine[number] *
           canvData.scale.viewMulti *
-          canvData.scale.allegedUnit,
+          canvData.scale.allegedUnit + 4,
       parseInt(number),
     );
     drawText(
-      axisData.yAxis + 5,
+      axisData.yAxis - 19,
       canvData.axis.xAxis +
         canvData.numberLine[number] *
           canvData.scale.viewMulti *
-          canvData.scale.allegedUnit,
+          canvData.scale.allegedUnit + 4,
       -parseInt(number),
     );
   }
