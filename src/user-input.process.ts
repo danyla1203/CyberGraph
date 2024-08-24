@@ -56,13 +56,7 @@ function generateNumRow() {
 export function onWheel(e: any) {
   const zoomData = canvData.scale;
   const delta = e.wheelDelta / 1000;
-  let newScale = e.wheelDelta / 10;
-  if (newScale < 0 && newScale * -1 > canvData.scale.scale) {
-    canvData.scale.scale = canvData.scale.scale / (newScale * -1);
-  } else {
-    canvData.scale.scale += newScale;
-  }
-  canvData.scale.scale += newScale;
+  canvData.scale.scale += e.wheelDelta / 10 * -1;
   zoomData.allegedUnit -= delta;
 
   if (
@@ -71,7 +65,7 @@ export function onWheel(e: any) {
   ) {
     zoomData.allegedUnit = 1;
     nextFactor();
-    canvData.numberLine.xLeft = generateNumRow();
+    canvData.numberLine = generateNumRow();
   }
 
   clearCanvas();

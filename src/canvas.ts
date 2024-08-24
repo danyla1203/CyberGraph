@@ -26,9 +26,7 @@ class CanvasData {
     viewMulti: number;
     scale: number;
   };
-  numberLine: {
-    xLeft: {};
-  };
+  numberLine: {};
   constructor() {
     this.height = canvHeight;
     this.width = canvWidth;
@@ -47,10 +45,10 @@ class CanvasData {
       viewMulti: 20,
     };
     this.graphFunc = (x: number) => 0;
-    this.numberLine = { xLeft: {} };
+    this.numberLine = {};
     for (let i = 0; i < 40; i++) {
-      this.numberLine.xLeft[i] = i * 5;
-    }
+      this.numberLine[i] = i * 5;
+    } 
   }
 }
 
