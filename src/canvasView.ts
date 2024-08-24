@@ -5,6 +5,8 @@ const canvas = document.querySelector<HTMLCanvasElement>(
 ) as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
+ctx.font = '13px serif';
+
 export function drawText(
   canvX: any,
   canvY: any,

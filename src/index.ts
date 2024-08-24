@@ -1,4 +1,3 @@
-
 import { drawGraphBtn } from './inputComponents';
 import { buttonClick, onMove, onWheel } from './user-input.process';
 import { canvas } from './canvas';
@@ -12,7 +11,6 @@ drawGraphBtn.addEventListener('click', buttonClick);
 canvas.onwheel = (e: any) => onWheel(e);
 
 canvas.onmousedown = (e) => {
-  //cords, where mouse button is downed
   const pointerCoords = {
     x: e.screenX,
     y: e.screenY,
@@ -24,7 +22,6 @@ canvas.onmousedown = (e) => {
 };
 
 canvas.ontouchstart = (e) => {
-  //cords, where mouse button is downed
   const pointerCoords = {
     x: e.changedTouches[0].clientX,
     y: e.changedTouches[0].clientY,

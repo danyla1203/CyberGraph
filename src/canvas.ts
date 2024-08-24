@@ -20,14 +20,15 @@ class CanvasData {
   };
   graphFunc: (x: number) => number;
   scale: {
-    allegedUnit: number;
-    scaleIterationStep: number;
-    scale: number;
-    upperLimit: number;
-    lowerLimit: number;
     factor: number;
+    factorMult: number;
+    allegedUnit: number;
+    viewMulti: number;
+    scale: number;
   };
-
+  numberLine: {
+    xLeft: {};
+  };
   constructor() {
     this.height = canvHeight;
     this.width = canvWidth;
@@ -39,14 +40,17 @@ class CanvasData {
       centerDifferenceY: 0,
     };
     this.scale = {
-      allegedUnit: 1,
-      scaleIterationStep: 1,
       scale: 100,
-      upperLimit: 150,
-      lowerLimit: 50,
-      factor: 2,
+      factor: 1,
+      factorMult: 1,
+      allegedUnit: 1,
+      viewMulti: 20,
     };
     this.graphFunc = (x: number) => 0;
+    this.numberLine = { xLeft: {} };
+    for (let i = 0; i < 40; i++) {
+      this.numberLine.xLeft[i] = i * 5;
+    }
   }
 }
 
