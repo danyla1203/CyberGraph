@@ -12,7 +12,7 @@ export function drawText(
   canvY: any,
   text: string,
 ) {
-  ctx.fillText(text + '', canvX, canvY);
+  ctx.fillText(text, canvX, canvY);
 }
 
 export function drawLine() {

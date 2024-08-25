@@ -4,11 +4,6 @@ import { graphInput } from './inputComponents';
 import { drawAxis, redrawAxis } from './services/axis.service';
 import { drawGraph } from './services/graph.service';
 
-function redrawCanvas() {
-  clearCanvas();
-  drawAxis();
-}
-
 export function onMove(event: any, pointerCoords: { x: number; y: number }) {
   const afterMoveCoords = {
     y: event.screenY || event.changedTouches[0].clientY,
@@ -17,7 +12,7 @@ export function onMove(event: any, pointerCoords: { x: number; y: number }) {
   let changedX = pointerCoords.x - afterMoveCoords.x;
   let changedY = pointerCoords.y - afterMoveCoords.y;
 
-  redrawCanvas();
+  clearCanvas();
 
   redrawAxis(changedX, changedY);
   //update pointer coords
@@ -42,13 +37,13 @@ function nextFactor(op: 'up' | 'down') {
       if (zoomData.factor === -5 && op === 'up') {
         zoomData.factor = -2;
       } else if (zoomData.factor === -5 && op === 'down') {
-         zoomData.factor = 1;
-         zoomData.factorMult *= -0.1;
-         break;
-      } else if (zoomData.factor === 5 && op === 'up')  {
-         zoomData.factor = 1;
-         zoomData.factorMult *= 10;
-      } else if ((zoomData.factor === 5 && op === 'down')) {
+        zoomData.factor = 1;
+        zoomData.factorMult *= -0.1;
+        break;
+      } else if (zoomData.factor === 5 && op === 'up') {
+        zoomData.factor = 1;
+        zoomData.factorMult *= 10;
+      } else if (zoomData.factor === 5 && op === 'down') {
         zoomData.factor = 2;
       }
   }
@@ -108,7 +103,8 @@ function parseFunc(func: string) {
   };
 }
 export function buttonClick() {
-  redrawCanvas();
+  clearCanvas();
+  drawAxis();
   const func = parseFunc(graphInput?.value);
   drawGraph(func, canvData.axis.centerDifferenceX);
   canvData.graphFunc = func;
