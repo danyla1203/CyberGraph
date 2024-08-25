@@ -10,7 +10,7 @@ ctx.font = '14px sans-serif';
 export function drawText(
   canvX: any,
   canvY: any,
-  text: number,
+  text: string,
 ) {
   ctx.fillText(text + '', canvX, canvY);
 }

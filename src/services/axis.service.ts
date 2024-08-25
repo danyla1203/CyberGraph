@@ -8,16 +8,19 @@ import {
 import { canvData, ctx } from '../canvas';
 
 const axisData = canvData.axis;
+const zoomData = canvData.scale;
 
 function drawNumbersX() {
   for (const number in canvData.numberLine) {
+    const point = parseFloat(number) * zoomData.factorMult;
+    const text = point.toFixed(('' + zoomData.factorMult).length);
     drawText(
       canvData.axis.yAxis -
         canvData.numberLine[number] *
           canvData.scale.viewMulti *
           canvData.scale.allegedUnit,
       axisData.xAxis + 15,
-      -parseInt(number),
+      text
     );
     drawText(
       canvData.axis.yAxis +
@@ -25,28 +28,32 @@ function drawNumbersX() {
           canvData.scale.viewMulti *
           canvData.scale.allegedUnit,
       axisData.xAxis + 15,
-      parseInt(number),
+      text
     );
   }
 }
 function drawNumbersY() {
   for (const number in canvData.numberLine) {
-    if (parseInt(number) === 0) continue;
+    if (number === '0') continue;
+    const point = parseFloat(number) * zoomData.factorMult;
+    const text = point.toFixed(( '' + zoomData.factorMult).length);
     drawText(
       axisData.yAxis - 15,
-      canvData.axis.xAxis -
+      axisData.xAxis -
         canvData.numberLine[number] *
-          canvData.scale.viewMulti *
-          canvData.scale.allegedUnit + 4,
-      parseInt(number),
+          zoomData.viewMulti *
+          zoomData.allegedUnit +
+        4,
+      text,
     );
     drawText(
       axisData.yAxis - 19,
-      canvData.axis.xAxis +
+      axisData.xAxis +
         canvData.numberLine[number] *
-          canvData.scale.viewMulti *
-          canvData.scale.allegedUnit + 4,
-      -parseInt(number),
+          zoomData.viewMulti *
+          zoomData.allegedUnit +
+        4,
+      text,
     );
   }
 }

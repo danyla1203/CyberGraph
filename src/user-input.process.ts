@@ -29,26 +29,39 @@ export function onMove(event: any, pointerCoords: { x: number; y: number }) {
   drawGraph(canvData.graphFunc, canvData.axis.centerDifferenceX);
 }
 
-function nextFactor() {
+function nextFactor(op: 'up' | 'down') {
   const zoomData = canvData.scale;
-  switch (zoomData.factor) {
+  switch (Math.abs(zoomData.factor)) {
     case 1:
-      zoomData.factor = 2;
+      zoomData.factor += op === 'up' ? 1 : -3;
       break;
     case 2:
-      zoomData.factor = 5;
+      zoomData.factor += op === 'up' ? 3 : -3;
       break;
     case 5:
-      zoomData.factor = 1;
-      zoomData.factorMult *= 10;
-      break;
+      if (zoomData.factor === -5 && op === 'up') {
+        zoomData.factor = -2;
+      } else if (zoomData.factor === -5 && op === 'down') {
+         zoomData.factor = 1;
+         zoomData.factorMult *= -0.1;
+         break;
+      } else if (zoomData.factor === 5 && op === 'up')  {
+         zoomData.factor = 1;
+         zoomData.factorMult *= 10;
+      } else if ((zoomData.factor === 5 && op === 'down')) {
+        zoomData.factor = 2;
+      }
   }
 }
 
 function generateNumRow() {
   let obj = {};
   for (let i = 0; i < 10; i += 1) {
-    obj[i * canvData.scale.factor] = i * 5;
+    const num =
+      canvData.scale.factor < 0
+        ? i / canvData.scale.factor
+        : i * canvData.scale.factor;
+    obj[num] = i * 5;
   }
   return obj;
 }
@@ -65,13 +78,22 @@ export function onWheel(e: any) {
   }
 
   zoomData.allegedUnit -= delta;
-
   if (
-    (zoomData.allegedUnit <= 0.5 && zoomData.factor === 1) ||
-    (zoomData.allegedUnit <= 0.4 && zoomData.factor === 2)
+    (zoomData.allegedUnit <= 0.5 && Math.abs(zoomData.factor) === 5) ||
+    (zoomData.allegedUnit <= 0.5 && Math.abs(zoomData.factor) === 1) ||
+    (zoomData.allegedUnit <= 0.4 && Math.abs(zoomData.factor) === 2)
   ) {
     zoomData.allegedUnit = 1;
-    nextFactor();
+    nextFactor('up');
+    canvData.numberLine = generateNumRow();
+  }
+  if (
+    (zoomData.allegedUnit >= 1.5 && Math.abs(zoomData.factor) === 5) ||
+    (zoomData.allegedUnit >= 1.5 && Math.abs(zoomData.factor) === 1) ||
+    (zoomData.allegedUnit >= 1.4 && Math.abs(zoomData.factor) === 2)
+  ) {
+    zoomData.allegedUnit = 1;
+    nextFactor('down');
     canvData.numberLine = generateNumRow();
   }
 

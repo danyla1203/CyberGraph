@@ -48,7 +48,7 @@ class CanvasData {
     this.numberLine = {};
     for (let i = 0; i < 40; i++) {
       this.numberLine[i] = i * 5;
-    } 
+    }
   }
 }
 
